@@ -1,0 +1,28 @@
+{
+  "name": "react-cached-callback",
+  "version": "0.1.0",
+  "description": "Library for excluding function generations on React's render function call",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "node ./node_modules/ts-node/dist/bin ./node_modules/tape/bin/tape ./src/index.spec.ts",
+    "build": "node ./node_modules/typescript/bin/tsc -p tsconfig.base.json"
+  },
+  "keywords": [
+    "react",
+    "bind",
+    "reselect",
+    "cache",
+    "arrow-function"
+  ],
+  "devDependencies": {
+    "@types/node": "^8.0.46",
+    "@types/tape": "^4.2.30",
+    "nodemon": "^1.12.1",
+    "tape": "^4.8.0",
+    "ts-node": "^3.3.0",
+    "typescript": "^2.4.1"
+  },
+  "author": "Michael Lebedev",
+  "email": "megazazik@rambler.ru",
+  "license": "MIT"
+}
