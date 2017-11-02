@@ -21,21 +21,56 @@ function setCache(obj: object, functionName: string | symbol, key: string | numb
 }
 
 
+
 export interface ICachedParams {
+	/**
+	 * индекс параметра, который будет использован как ключ при получении закешированной функции
+	 * по умолчанию - 0
+	 */
 	index?: number;
+	/**
+	 * функция, которая будет использована для получение ключа кеша
+	 */
 	getKey?: (...args) => string | symbol | number;
+	/**
+	 * признак тог, что кешируемую функцию можно считать чистой и не вызывать ее снова при получении тех же параметров
+	 * по умолчанию - true
+	 */
 	pure?: boolean;
 }
 
 /**
  * Фабрика декораторов для кеширования возвращаемых функций
- * @param key индекс параметра, который будет использован как ключ или функция, которая возвращает ключ на основе параметров
+ * @param params параметры декоратора
  */
-export default function cached({ index = 0, getKey, pure = true }: ICachedParams = {}) {
+export default function cached<T>(
+	prototype: Object, 
+	name: string | symbol, 
+	descriptor: TypedPropertyDescriptor<T>
+): TypedPropertyDescriptor<T>;
+export default function cached(params?: ICachedParams): 
+	<T>(
+		prototype: Object, 
+		name: string | symbol, 
+		descriptor: TypedPropertyDescriptor<T>
+	) => TypedPropertyDescriptor<T>;
+export default function cached<T>(
+	params?: ICachedParams | Object, 
+	name?: string | symbol, 
+	descriptor?: TypedPropertyDescriptor<T>
+) {
+	if (descriptor === undefined) {
+		return innerCached(params);
+	} else {
+		return innerCached()(params, name, descriptor);
+	}
+}
+
+function innerCached({ index = 0, getKey, pure = true }: ICachedParams = {}) {
 	const getCacheKey = getKey ?
 		getKey :
 		(...args) => args[index];
-	return <T>(prototype: Object, name: string | symbol, descriptor: TypedPropertyDescriptor<T>) => {
+	return <T>(prototype: Object, name: string | symbol, descriptor: TypedPropertyDescriptor<T>): TypedPropertyDescriptor<T> => {
 		return {
 			enumerable: false,
 			configurable: true,
@@ -56,7 +91,7 @@ export default function cached({ index = 0, getKey, pure = true }: ICachedParams
 
 				return cache4Function.func;
 			}
-		};
+		} as any;
 	};
 }
 
