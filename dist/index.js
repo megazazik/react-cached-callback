@@ -17,11 +17,22 @@ function getCache(obj, functionName, key) {
 function setCache(obj, functionName, key, cachedObj) {
     obj[cachedFunctionFieldName][functionName][key] = cachedObj;
 }
-/**
- * Фабрика декораторов для кеширования возвращаемых функций
- * @param key индекс параметра, который будет использован как ключ или функция, которая возвращает ключ на основе параметров
- */
-function cached(_a) {
+function cached(params, name, descriptor) {
+    if (typeof params === 'number') {
+        return innerCached({ index: params });
+    }
+    else if (typeof params === 'function') {
+        return innerCached({ getKey: params });
+    }
+    else if (descriptor === undefined) {
+        return innerCached(params);
+    }
+    else {
+        return innerCached()(params, name, descriptor);
+    }
+}
+exports.default = cached;
+function innerCached(_a) {
     var _b = _a === void 0 ? {} : _a, _c = _b.index, index = _c === void 0 ? 0 : _c, getKey = _b.getKey, _d = _b.pure, pure = _d === void 0 ? true : _d;
     var getCacheKey = getKey ?
         getKey :
@@ -63,7 +74,6 @@ function cached(_a) {
         };
     };
 }
-exports.default = cached;
 function arraysEqual(arr1, arr2) {
     if (!arr1 || !arr2) {
         return false;
@@ -72,7 +82,7 @@ function arraysEqual(arr1, arr2) {
         return false;
     }
     for (var i = 0; i < arr1.length; i++) {
-        if (arr1[i] != arr2[i]) {
+        if (arr1[i] !== arr2[i]) {
             return false;
         }
     }

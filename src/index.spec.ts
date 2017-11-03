@@ -47,9 +47,39 @@ test("index parameter tests", (t) => {
 	t.end();
 });
 
+test("index parameter simplified tests", (t) => {
+	class Tested {
+		@cached(2)
+		args(...args) {
+			return (...innerArgs) => [...args, ...innerArgs];
+		}
+	}
+	
+	const obj = new Tested();
+	t.equal(obj.args('str1', 5, 10), obj.args('str2', 6, 10), 'The index parameter is used to specify a key.');
+	t.notEqual(obj.args('str1', 5, 10), obj.args('str1', 5, 11), 'Bound functions for different key are not equals.');
+
+	t.end();
+});
+
 test("getKey parameter tests", (t) => {
 	class Tested {
 		@cached({getKey: (...args) => args[0].id})
+		args(...args) {
+			return (...innerArgs) => [...args, ...innerArgs];
+		}
+	}
+	
+	const obj = new Tested();
+	t.equal(obj.args({id: 10}, 'str1'), obj.args({id: 10}, 'str2'), 'The getKey parameter is used to specify a key.');
+	t.notEqual(obj.args({id: 10}, 5, 10), obj.args({id: 11}, 5, 11), 'Bound functions for different key are not equals.');
+
+	t.end();
+});
+
+test("getKey parameter simplified tests", (t) => {
+	class Tested {
+		@cached((...args) => args[0].id)
 		args(...args) {
 			return (...innerArgs) => [...args, ...innerArgs];
 		}

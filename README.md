@@ -22,7 +22,7 @@ class SomeComponent extends React.Component {
 }
 ```
 
-##Why?##
+## Why?
 It is not recomended to create new functions in each `render` function call in `react` and pass them to child components. That is because of performance optimization reasons. Performance decrease can happen when you use arrow-function or bind in `render` function. Usualy you can easy avoid this by creating a component's property with an arrow-function:
 ```javascript
 class SomeComponent extends React.Component {
@@ -42,10 +42,10 @@ class SomeComponent extends React.Component {
 But sometimes you need to pass `onClickHandler` to a number of components in cycle. And onClickHandler needs to know an elements's index when it is executed.
 `react-cached-callback` will help you to resolve this issue easy.
 
-##How it works##
+## How it works
 To use `react-cached-callback` you need to add method in `react` component which will create callbacks for each component rendered in `render` in cycle. `react-cached-callback` creates a number of high order functions for such callbacks and returns existed one of them if it is called with the same parameter in the second time.
 
-##API##
+## API
 To determine which cached callback should be returned `react-cached-callback` needs to know a key.
 By default the first parameter is used as a key:
 ```javascript
@@ -66,10 +66,10 @@ render() {
 ```
 `index` is used as a key here. If `_onClick` is called with the same index next time the same high order function will be returned, so the `ChildComponent` will not be rerendered if it is pure.
 
-###@cached({index: number})###
+###@cached(index: number)
 You can use any parameter as a key by specifying a parameter's index:
 ```javascript
-@cached({index: 1})
+@cached(1)
 _onClick(obj, index) {
 	return () => doSomething(obj);
 }
@@ -84,11 +84,13 @@ render() {
 	);
 }
 ```
+This overload is a shortcut. You can pass an index also with full form of record:
+``@cached({index: 1})``
 
-###@cached({getKey: function})###
+### @cached(getKey: function)
 You can specify a function to calculate a key using passed parameters:
 ```javascript
-@cached({getKey: (obj) => obj.id})
+@cached((obj) => obj.id)
 _onClick(obj) {
 	return () => doSomething(obj);
 }
@@ -104,9 +106,11 @@ render() {
 }
 ```
 In this case `getKey` will get the same paramethers as the `_onClick`.
+This overload is a shortcut. You can pass `getKey` also with full form of record:
+``@cached({getKey: (obj) => obj.id})``
 If `getKey` is passed to `@cached` then the `index` parameter is ignored.
 
-###@cached({pure: boolean})###
+### @cached({pure: boolean})
 When cached property is called with the all same parameters in the next time it does not call the original `_onClick` function and used cached result. If at least one parameter is changed the original `_onClick` is called.
 If you need to call the original `_onClick` each time you can specify a `pure` parameter to `false`:
 ```javascript
@@ -115,4 +119,5 @@ _onClick(obj) {
 	return () => doSomething(obj);
 }
 ```
-It can be used with any other parameters.
+It can be used with any other parameters when the full form of record is used:
+``@cached({index: 2, pure: false})``

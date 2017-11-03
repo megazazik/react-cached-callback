@@ -54,12 +54,28 @@ export default function cached(params?: ICachedParams):
 		name: string | symbol, 
 		descriptor: TypedPropertyDescriptor<T>
 	) => TypedPropertyDescriptor<T>;
+export default function cached(index: number): 
+	<T>(
+		prototype: Object, 
+		name: string | symbol, 
+		descriptor: TypedPropertyDescriptor<T>
+	) => TypedPropertyDescriptor<T>;
+export default function cached(getKey: (...args) => (number | string | symbol)): 
+	<T>(
+		prototype: Object, 
+		name: string | symbol, 
+		descriptor: TypedPropertyDescriptor<T>
+	) => TypedPropertyDescriptor<T>;
 export default function cached<T>(
-	params?: ICachedParams | Object, 
+	params?: ICachedParams | Object | number | ((...args) => (number | string | symbol)), 
 	name?: string | symbol, 
 	descriptor?: TypedPropertyDescriptor<T>
 ) {
-	if (descriptor === undefined) {
+	if (typeof params === 'number') {
+		return innerCached({index: params});
+	} else if (typeof params === 'function') {
+		return innerCached({getKey: params});
+	} else if (descriptor === undefined) {
 		return innerCached(params);
 	} else {
 		return innerCached()(params, name, descriptor);
@@ -105,7 +121,7 @@ function arraysEqual(arr1: any[], arr2: any[]) {
 	}
 
 	for (let i = 0; i < arr1.length; i++) {
-		if (arr1[i] != arr2[i]) {
+		if (arr1[i] !== arr2[i]) {
 			return false;
 		}
 	}
