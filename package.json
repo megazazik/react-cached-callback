@@ -1,6 +1,6 @@
 {
   "name": "react-cached-callback",
-  "version": "0.4.0",
+  "version": "1.0.0",
   "description": "Library for excluding function generations on React's render function call",
   "main": "dist/index.js",
   "scripts": {
