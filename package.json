@@ -4,7 +4,7 @@
   "description": "Library for excluding function generations on React's render function call",
   "main": "dist/index.js",
   "scripts": {
-    "test": "node ./node_modules/ts-node/dist/bin ./node_modules/tape/bin/tape ./src/index.spec.ts",
+    "test": "node ./node_modules/ts-node/dist/bin ./node_modules/tape/bin/tape ./src/**.spec.ts",
     "build": "node ./node_modules/typescript/bin/tsc -p tsconfig.base.json"
   },
   "keywords": [

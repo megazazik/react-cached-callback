@@ -88,4 +88,9 @@ function arraysEqual(arr1, arr2) {
     }
     return true;
 }
+function makeCached(Component, propertyName, params) {
+    var prototype = Component.prototype;
+    Object.defineProperty(prototype, propertyName, cached(params)(prototype, propertyName, Object.getOwnPropertyDescriptor(prototype, propertyName)));
+}
+exports.makeCached = makeCached;
 //# sourceMappingURL=index.js.map

@@ -22,3 +22,4 @@ export default function cached<T>(prototype: Object, name: string | symbol, desc
 export default function cached(params?: ICachedParams): <T>(prototype: Object, name: string | symbol, descriptor: TypedPropertyDescriptor<T>) => TypedPropertyDescriptor<T>;
 export default function cached(index: number): <T>(prototype: Object, name: string | symbol, descriptor: TypedPropertyDescriptor<T>) => TypedPropertyDescriptor<T>;
 export default function cached(getKey: (...args) => (number | string | symbol)): <T>(prototype: Object, name: string | symbol, descriptor: TypedPropertyDescriptor<T>) => TypedPropertyDescriptor<T>;
+export declare function makeCached(Component: any, propertyName: string, params?: ICachedParams | number | ((...args) => (number | string | symbol))): void;

@@ -128,3 +128,17 @@ function arraysEqual(arr1: any[], arr2: any[]) {
 
 	return true;
 }
+
+
+export function makeCached(Component: any, propertyName: string, params?: ICachedParams | number | ((...args) => (number | string | symbol))) {
+	const prototype = (Component as Function).prototype;
+	Object.defineProperty(
+		prototype, 
+		propertyName,
+		cached(params as any)(
+			prototype,
+			propertyName,
+			Object.getOwnPropertyDescriptor(prototype, propertyName)
+		)
+	)
+}

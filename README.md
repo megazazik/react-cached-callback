@@ -162,3 +162,52 @@ _onClick(obj) {
 	return () => doSomething(obj);
 }
 ```
+### makeCached
+if you cannot use decorators you can use a helper function `makeCached`. It has the follofing interface:  
+makeCached(component: object, methodName: string, params?: object)  
+
+* *component* - react component class (or some other class)
+* *methodName* - method's name which should be cached
+* *params* - the same parameters which the `cached` decorator gets
+
+#### without parameters
+```javascript
+import { makeCached } from 'react-cached-callback';
+
+class SomeComponent extends React.Component {
+	_onClick(index) {
+		return () => doSomething(index);
+	}
+
+	render() {
+		return (
+			<div>
+				{someArray.map((obj, index) => (
+					<ChildComponent onClick={this._onClick(index)} />
+				))}
+			</div>
+		);
+	}
+}
+
+makeCached(SomeComponent, '_onClick');
+```
+
+#### index
+```
+makeCached(SomeComponent, '_onClick', {index: 1});
+// or 
+makeCached(SomeComponent, '_onClick', 1);
+```
+
+#### getKey
+```
+makeCached(SomeComponent, '_onClick', {getKey: (obj) => obj.id});
+// or 
+makeCached(SomeComponent, '_onClick', (obj) => obj.id);
+```
+
+#### pure
+```
+makeCached(SomeComponent, '_onClick', {pure: false);
+```
