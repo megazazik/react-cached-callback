@@ -24,9 +24,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://megazazik@bitbucket.org/megazazik/react-cached-callback.git"
+    "url": "https://github.com/megazazik/react-cached-callback.git"
   },
-  "homepage": "https://megazazik@bitbucket.org/megazazik/react-cached-callback",
+  "homepage": "https://github.com/megazazik/react-cached-callback",
   "author": "Michael Lebedev",
   "email": "megazazik@rambler.ru",
   "license": "MIT"

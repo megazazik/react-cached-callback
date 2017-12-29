@@ -39,15 +39,58 @@ class SomeComponent extends React.Component {
 	}
 }
 ```
-But sometimes you need to pass `onClickHandler` to a number of components in cycle. And onClickHandler needs to know an elements's index when it is executed.
+But sometimes you need to pass `onClickHandler` to a number of components in cycle. And `onClickHandler` needs to know an elements's index when it is executed.
 `react-cached-callback` will help you to resolve this issue easy.
 
 ## How it works
-To use `react-cached-callback` you need to add method in `react` component which will create callbacks for each component rendered in `render` in cycle. `react-cached-callback` creates a number of high order functions for such callbacks and returns existed one of them if it is called with the same parameter in the second time.
+To use `react-cached-callback` you need to add into a component a method  which will create callbacks for each component rendered in cycle. Then you need to decorate it with `cached`. For example:
+```javascript
+@cached
+_createOnClick(index) {
+	return () => doSomething(index);
+}
+
+render() {
+	return (
+		<div>
+			{someArray.map((obj, index) => (
+				<ChildComponent onClick={this._createOnClick(index)} />
+			))}
+		</div>
+	);
+}
+```
+When `_createOnClick` is called with some index for the first time `react-cached-callback` saves a callback returned by original `_createOnClick`, creates a wrapper for it and returns the wrapper.  
+When `_createOnClick` is called with the same index next time `react-cached-callback` gets a new callback from the original `_createOnClick`, save it and returns the wrapper which was created earlier. When the wrapper is called it calls a callback which was returned by original `_createOnClick` last time.
+
+To determine a wrapper which should be returned `react-cached-callback` uses a *key*. In the example above the first argument (`index`) is used as a key. You can specify an other key. See API for more details.
 
 ## API
-To determine which cached callback should be returned `react-cached-callback` needs to know a key.
-By default the first parameter is used as a key:
+The `cached` decorator can be used with one argument or without it. This argument can be an object, a number or a function.
+```javascript
+// with object with parameters
+@cached({index: 1, pure: false})
+
+// with number
+@cached(1)
+
+// with function
+@cached((obj) => obj.id)
+
+// without arguments
+@cached
+//or
+@cached()
+```
+
+### Parameters
+You can pass the following parameters to `cached`:
+* *index* (number) - index of an argument which will be used as a key
+* *getKey* (function) - function to calculate a key. It cannot be used with *index*.
+* *pure* (boolean) - if *pure* is true `react-cached-callback` will not call the original method to get a callback if it is called with the same parameters next time.
+
+### no arguments
+If `react-cached-callback` is used without arguments the first parameter is used as a key:
 ```javascript
 @cached
 _onClick(index) {
@@ -64,11 +107,13 @@ render() {
 	);
 }
 ```
-`index` is used as a key here. If `_onClick` is called with the same index next time the same high order function will be returned, so the `ChildComponent` will not be rerendered if it is pure.
+`index` is used as a key here. If `_onClick` is called with the same index next time the same wrapper will be returned.
 
-###@cached(index: number)
-You can use any parameter as a key by specifying a parameter's index:
+### index
+You can use any parameter as a key by specifying a parameter's index
 ```javascript
+@cached({index: 1})
+// or 
 @cached(1)
 _onClick(obj, index) {
 	return () => doSomething(obj);
@@ -84,13 +129,13 @@ render() {
 	);
 }
 ```
-This overload is a shortcut. You can pass an index also with full form of record:
-``@cached({index: 1})``
 
-### @cached(getKey: function)
+### getKey
 You can specify a function to calculate a key using passed parameters:
 ```javascript
 @cached((obj) => obj.id)
+// or
+@cached({getKey: (obj) => obj.id})
 _onClick(obj) {
 	return () => doSomething(obj);
 }
@@ -105,13 +150,11 @@ render() {
 	);
 }
 ```
-In this case `getKey` will get the same paramethers as the `_onClick`.
-This overload is a shortcut. You can pass `getKey` also with full form of record:
-``@cached({getKey: (obj) => obj.id})``
+The `getKey` gets the same parameters as the original method. In this case the `getKey` will get one parameter - `obj`, and the obj's id will be used as a key.  
 If `getKey` is passed to `@cached` then the `index` parameter is ignored.
 
-### @cached({pure: boolean})
-When cached property is called with the all same parameters in the next time it does not call the original `_onClick` function and used cached result. If at least one parameter is changed the original `_onClick` is called.
+### pure
+When a wrapper is called with all the same parameters in the next time it does not call the original `_onClick` function and used cached result. If at least one parameter is changed the original `_onClick` is called.
 If you need to call the original `_onClick` each time you can specify a `pure` parameter to `false`:
 ```javascript
 @cached({pure: false})
@@ -119,5 +162,3 @@ _onClick(obj) {
 	return () => doSomething(obj);
 }
 ```
-It can be used with any other parameters when the full form of record is used:
-``@cached({index: 2, pure: false})``
