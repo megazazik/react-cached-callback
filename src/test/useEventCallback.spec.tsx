@@ -1,0 +1,146 @@
+import * as React from 'react';
+import { mount } from 'enzyme';
+import test from 'tape';
+import useEventCallback from '../useEventCallback';
+import mountCheckWarning from './boundary';
+
+const TestComponent = ({params = []}: {params?: any[]}) => {
+    const callback = useEventCallback((...args) => [...params, ...args]);
+
+    return (
+        <span onClick={callback} />
+    );
+}
+
+test('EventCallback. Params', (t) => {    
+    const wrapper = mount(<TestComponent />);
+
+    t.deepEqual(wrapper.children().props().onClick(), [], 'Without params');
+    t.deepEqual(wrapper.children().props().onClick(5), [5], 'Simple call param');
+    t.deepEqual(wrapper.children().props().onClick(5, 'c'), [5, 'c'], 'Multi call param');
+
+    const wrapperWithParams = mount(<TestComponent params={[true, 'a']}/>);
+
+    t.deepEqual(wrapperWithParams.children().props().onClick(), [true, 'a'], 'With params');
+    t.deepEqual(wrapperWithParams.children().props().onClick(5), [true, 'a', 5], 'With params. Simple call param');
+    t.deepEqual(wrapperWithParams.children().props().onClick(5, 'c'), [true, 'a', 5, 'c'], 'With params. Multi call param');
+
+    const wrapperAfterUpdate = mount(<TestComponent />);
+    wrapperAfterUpdate.setProps({params:[true, 'a']});
+
+    t.deepEqual(wrapperWithParams.children().props().onClick(), [true, 'a'], 'After update');
+    t.deepEqual(wrapperWithParams.children().props().onClick(5), [true, 'a', 5], 'After update. Simple call param');
+    t.deepEqual(wrapperWithParams.children().props().onClick(5, 'c'), [true, 'a', 5, 'c'], 'After update. Multi call param');
+
+    t.end();
+})
+
+test('EventCallback. Cache', (t) => {
+    const wrapper = mount(<TestComponent />);
+
+    const callback = wrapper.children().props().onClick;
+    t.deepEqual(callback(), [], 'Without params');
+    t.deepEqual(callback(5), [5], 'Simple call param');
+    t.deepEqual(callback(5, 'c'), [5, 'c'], 'Multi call param');
+
+    wrapper.setProps({params:[true, 'a']});
+
+    const callbackAfterUpdate = wrapper.children().props().onClick;
+    t.deepEqual(callbackAfterUpdate(), [true, 'a'], 'With params');
+    t.deepEqual(callbackAfterUpdate(5), [true, 'a', 5], 'With params. Simple call param');
+    t.deepEqual(callbackAfterUpdate(5, 'c'), [true, 'a', 5, 'c'], 'With params. Multi call param');
+
+    wrapper.setProps({params:[false]});
+    const callbackAfter2Updates = wrapper.children().props().onClick;
+    t.deepEqual(callbackAfter2Updates(5), [false, 5], 'After 2 updates. Params');
+
+    t.equal(callback, callbackAfterUpdate, 'Callbacks are equels');
+    t.equal(callback, callbackAfter2Updates, 'Callbacks are equels')
+
+    t.end();
+});
+
+test('EventCallback. Error outside render', (t) => {
+    const TestComponentWithError = ({params = []}: {params?: any[]}) => {
+        const callback = useEventCallback((...args) => [...params, ...args]);
+
+        callback();
+    
+        return (
+            <span onClick={callback} />
+        );
+    }
+
+    const [_, wasError] = mountCheckWarning(<TestComponentWithError />);
+
+    t.equal(wasError, true, 'Should throw error');
+
+    t.end();
+});
+
+test('EventCallback. Error outside render in children', (t) => {
+    const TestChildren = ({callback}) => {
+        callback();
+        return null;
+    }
+    const TestComponentWithError = ({params = []}: {params?: any[]}) => {
+        const callback = useEventCallback((...args) => [...params, ...args]);
+    
+        return (
+            <TestChildren callback={callback} />
+        );
+    }
+
+    const [_, wasError] = mountCheckWarning(<TestComponentWithError />);
+
+    t.equal(wasError, true, 'Should throw error');
+    
+    t.end();
+});
+
+test('EventCallback. In useEffect', (t) => {
+    const TestChildren = ({callback}) => {
+        React.useEffect(callback); 
+        return null;
+    }
+    const TestComponentWithoutError = ({params = []}: {params?: any[]}) => {
+        const callback = useEventCallback((...args) => [...params, ...args]);
+    
+        return (
+            <TestChildren callback={callback} />
+        );
+    }
+
+    const [_, wasError] = mountCheckWarning(<TestComponentWithoutError />);
+
+    t.equal(wasError, false, 'Should not throw error');
+    
+    t.end();
+});
+
+
+test('EventCallback. In componentDidMount', (t) => {
+    class TestChildren extends React.Component<{callback}> {
+        componentDidMount () {
+            this.props.callback();
+        }
+
+        render () {
+            return null;
+        }
+    }
+
+    const TestComponentWithError = ({params = []}: {params?: any[]}) => {
+        const callback = useEventCallback((...args) => [...params, ...args]);
+    
+        return (
+            <TestChildren callback={callback} />
+        );
+    }
+
+    const [_, wasError] = mountCheckWarning(<TestComponentWithError />);
+
+    t.equal(wasError, true, 'Should throw error');
+
+    t.end();
+});

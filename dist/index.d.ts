@@ -7,7 +7,7 @@ export interface ICachedParams {
     /**
      * функция, которая будет использована для получение ключа кеша
      */
-    getKey?: (...args) => string | symbol | number;
+    getKey?: (...args: any[]) => string | symbol | number;
     /**
      * признак тог, что кешируемую функцию можно считать чистой и не вызывать ее снова при получении тех же параметров
      * по умолчанию - true
@@ -21,5 +21,5 @@ export interface ICachedParams {
 export default function cached<T>(prototype: Object, name: string | symbol, descriptor: TypedPropertyDescriptor<T>): TypedPropertyDescriptor<T>;
 export default function cached(params?: ICachedParams): <T>(prototype: Object, name: string | symbol, descriptor: TypedPropertyDescriptor<T>) => TypedPropertyDescriptor<T>;
 export default function cached(index: number): <T>(prototype: Object, name: string | symbol, descriptor: TypedPropertyDescriptor<T>) => TypedPropertyDescriptor<T>;
-export default function cached(getKey: (...args) => (number | string | symbol)): <T>(prototype: Object, name: string | symbol, descriptor: TypedPropertyDescriptor<T>) => TypedPropertyDescriptor<T>;
-export declare function makeCached(Component: any, propertyName: string, params?: ICachedParams | number | ((...args) => (number | string | symbol))): void;
+export default function cached(getKey: (...args: any[]) => (number | string | symbol)): <T>(prototype: Object, name: string | symbol, descriptor: TypedPropertyDescriptor<T>) => TypedPropertyDescriptor<T>;
+export declare function makeCached(Component: any, propertyName: string, params?: ICachedParams | number | ((...args: any[]) => (number | string | symbol))): void;
