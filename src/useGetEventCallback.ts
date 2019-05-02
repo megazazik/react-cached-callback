@@ -1,40 +1,24 @@
 import { useRef, useEffect } from 'react';
+import initGetKey, { Params } from './getKey';
 
-export interface IEventCallbacksParams {
-    /**
-	 * index of argument which will be used as a cache key
-	 * default value - 0
-	 */
-	index?: number;
-	/**
-	 * function to get key by arguments
-	 */
-	getKey?: (...args) => string | symbol | number;
-}
+export { Params };
 
-export default function useEventCallbacks<C extends ((...args) => (...args) => any)> (
+export default function useGetEventCallback<C extends ((...args) => (...args) => any)> (
     createCallback: C,
-    params?: IEventCallbacksParams | number | ((...args) => (number | string | symbol))
+    params?: Params
 ): C {
-    if (typeof params === 'number') {
-		return useInnerCallbacks(createCallback, {index: params});
-	} else if (typeof params === 'function') {
-		return useInnerCallbacks(createCallback, {getKey: params});
-	} else {
-		return useInnerCallbacks(createCallback, params);
-	}
+    return useGetEventCallbackInner(createCallback, initGetKey(params));
+
 }
 
-function useInnerCallbacks<C extends ((...args) => (...args) => any)> (
+function useGetEventCallbackInner<C extends ((...args) => (...args) => any)> (
     createCallback: C,
-    { index = 0, getKey }: IEventCallbacksParams = {}
+    getCacheKey: (...args) => (number | string | symbol)
 ): C {
     const callbacksCache = useRef<object>();
     if (!callbacksCache.current) {
         callbacksCache.current = {};
     }
-
-    const getCacheKey = getKey || ((...args) => args[index]);
 
     useEffect(() => {
         // update old and clear unused callbacks
@@ -54,12 +38,15 @@ function useInnerCallbacks<C extends ((...args) => (...args) => any)> (
 
         if (!cache4Function) {
             cache4Function = {};
-            cache4Function.cached = () => { throw new Error('Cannot call an event handler while rendering.'); };
+            cache4Function.cached = () => {
+                if (typeof console !== 'undefined' && typeof console.warn === 'function') {
+                    console.warn('useEventCallbacks. You should not call an event handler while rendering.');
+                }
+            };
             cache4Function.func = (...callArgs) => cache4Function.cached(...callArgs);
             callbacksCache.current[cacheKey] = cache4Function;
         }
 
-        cache4Function.args = args;
         cache4Function.next = createCallback(...args);
 
         return cache4Function.func;

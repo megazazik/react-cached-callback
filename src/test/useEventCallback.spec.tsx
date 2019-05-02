@@ -2,7 +2,7 @@ import * as React from 'react';
 import { mount } from 'enzyme';
 import test from 'tape';
 import useEventCallback from '../useEventCallback';
-import mountCheckWarning from './boundary';
+import mountCheckWarning from './mountCheckWarning';
 
 const TestComponent = ({params = []}: {params?: any[]}) => {
     const callback = useEventCallback((...args) => [...params, ...args]);
@@ -60,9 +60,9 @@ test('EventCallback. Cache', (t) => {
     t.end();
 });
 
-test('EventCallback. Error outside render', (t) => {
-    const TestComponentWithError = ({params = []}: {params?: any[]}) => {
-        const callback = useEventCallback((...args) => [...params, ...args]);
+test('EventCallback. Warning inside render', (t) => {
+    const TestComponentUseDuringRender = () => {
+        const callback = useEventCallback(() => {});
 
         callback();
     
@@ -71,53 +71,52 @@ test('EventCallback. Error outside render', (t) => {
         );
     }
 
-    const [_, wasError] = mountCheckWarning(<TestComponentWithError />);
+    const [_, wasWarning] = mountCheckWarning(<TestComponentUseDuringRender />);
 
-    t.equal(wasError, true, 'Should throw error');
+    t.equal(wasWarning, true, 'Should throw warning');
 
     t.end();
 });
 
-test('EventCallback. Error outside render in children', (t) => {
+test('EventCallback. Warning inside render in children', (t) => {
     const TestChildren = ({callback}) => {
         callback();
         return null;
     }
-    const TestComponentWithError = ({params = []}: {params?: any[]}) => {
-        const callback = useEventCallback((...args) => [...params, ...args]);
+    const TestComponentUseDuringRender = () => {
+        const callback = useEventCallback(() => {});
     
         return (
             <TestChildren callback={callback} />
         );
     }
 
-    const [_, wasError] = mountCheckWarning(<TestComponentWithError />);
+    const [_, wasWarning] = mountCheckWarning(<TestComponentUseDuringRender />);
 
-    t.equal(wasError, true, 'Should throw error');
+    t.equal(wasWarning, true, 'Should throw warning');
     
     t.end();
 });
 
 test('EventCallback. In useEffect', (t) => {
     const TestChildren = ({callback}) => {
-        React.useEffect(callback); 
+        React.useEffect(callback);
         return null;
     }
-    const TestComponentWithoutError = ({params = []}: {params?: any[]}) => {
-        const callback = useEventCallback((...args) => [...params, ...args]);
+    const TestComponentNoUseDuringRender = () => {
+        const callback = useEventCallback(() => {});
     
         return (
             <TestChildren callback={callback} />
         );
     }
 
-    const [_, wasError] = mountCheckWarning(<TestComponentWithoutError />);
+    const [_, wasWarning] = mountCheckWarning(<TestComponentNoUseDuringRender />);
 
-    t.equal(wasError, false, 'Should not throw error');
+    t.equal(wasWarning, false, 'Should not throw warning');
     
     t.end();
 });
-
 
 test('EventCallback. In componentDidMount', (t) => {
     class TestChildren extends React.Component<{callback}> {
@@ -130,17 +129,17 @@ test('EventCallback. In componentDidMount', (t) => {
         }
     }
 
-    const TestComponentWithError = ({params = []}: {params?: any[]}) => {
-        const callback = useEventCallback((...args) => [...params, ...args]);
+    const TestComponentUseDuringRender = () => {
+        const callback = useEventCallback(() => {});
     
         return (
             <TestChildren callback={callback} />
         );
     }
 
-    const [_, wasError] = mountCheckWarning(<TestComponentWithError />);
+    const [_, wasWarning] = mountCheckWarning(<TestComponentUseDuringRender />);
 
-    t.equal(wasError, true, 'Should throw error');
+    t.equal(wasWarning, true, 'Should throw warning');
 
     t.end();
 });

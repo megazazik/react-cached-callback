@@ -7,7 +7,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "ts-node -r ./config/require ./node_modules/tape/bin/tape",
-    "tests": "npm run test ./src/**.spec.*",
+    "tests": "npm run test ./src/**/*.spec.*",
     "test-w": "nodemon -e ts,tsx --exec npm run test",
     "build": "npm run build-cjs && npm run build-es",
     "build-cjs": "tsc -p tsconfig.base.json",

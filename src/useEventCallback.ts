@@ -2,7 +2,9 @@ import { useRef, useLayoutEffect, useCallback } from 'react';
 
 export default function useEventCallback<C extends (...args) => any>(fn: C): C {
 	const ref = useRef<(...args) => any>(() => {
-		throw new Error('Cannot call an event handler while rendering.');
+		if (typeof console !== 'undefined' && typeof console.warn === 'function') {
+			console.warn('useEventCallback. You should not call an event handler while rendering.');
+		}
 	});
 
 	useLayoutEffect(() => {
