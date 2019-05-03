@@ -1,13 +1,13 @@
-import * as test from 'tape';
-import cached from './';
+import test from 'tape';
+import { makeCached } from '../';
 
-test("cached decorator tests", (t) => {
+test("makeCached tests", (t) => {
 	class Tested {
-		@cached()
 		args(...args) {
 			return (...innerArgs) => [...args, ...innerArgs];
 		}
 	}
+	makeCached(Tested, 'args');
 	
 	const obj = new Tested();
 	t.deepEqual(obj.args(5)(), [5], 'With single param');
@@ -34,11 +34,11 @@ test("cached decorator tests", (t) => {
 
 test("index parameter tests", (t) => {
 	class Tested {
-		@cached({index: 2})
 		args(...args) {
 			return (...innerArgs) => [...args, ...innerArgs];
 		}
 	}
+	makeCached(Tested, 'args', {index: 2});
 	
 	const obj = new Tested();
 	t.equal(obj.args('str1', 5, 10), obj.args('str2', 6, 10), 'The index parameter is used to specify a key.');
@@ -49,11 +49,11 @@ test("index parameter tests", (t) => {
 
 test("index parameter simplified tests", (t) => {
 	class Tested {
-		@cached(2)
 		args(...args) {
 			return (...innerArgs) => [...args, ...innerArgs];
 		}
 	}
+	makeCached(Tested, 'args', 2);
 	
 	const obj = new Tested();
 	t.equal(obj.args('str1', 5, 10), obj.args('str2', 6, 10), 'The index parameter is used to specify a key.');
@@ -64,11 +64,11 @@ test("index parameter simplified tests", (t) => {
 
 test("getKey parameter tests", (t) => {
 	class Tested {
-		@cached({getKey: (...args) => args[0].id})
 		args(...args) {
 			return (...innerArgs) => [...args, ...innerArgs];
 		}
 	}
+	makeCached(Tested, 'args', {getKey: (...args) => args[0].id});
 	
 	const obj = new Tested();
 	t.equal(obj.args({id: 10}, 'str1'), obj.args({id: 10}, 'str2'), 'The getKey parameter is used to specify a key.');
@@ -79,11 +79,11 @@ test("getKey parameter tests", (t) => {
 
 test("getKey parameter simplified tests", (t) => {
 	class Tested {
-		@cached((...args) => args[0].id)
 		args(...args) {
 			return (...innerArgs) => [...args, ...innerArgs];
 		}
 	}
+	makeCached(Tested, 'args', (...args) => args[0].id);
 	
 	const obj = new Tested();
 	t.equal(obj.args({id: 10}, 'str1'), obj.args({id: 10}, 'str2'), 'The getKey parameter is used to specify a key.');
@@ -96,12 +96,13 @@ test("pure parameter tests", (t) => {
 	t.test('pure is true', (t) => {
 		class Tested {
 			count = 0;
-			@cached({pure: true})
+
 			args(...args) {
 				this.count++;
 				return (...innerArgs) => [...args, ...innerArgs];
 			}
 		}
+		makeCached(Tested, 'args', {pure: true});
 		
 		const obj = new Tested();
 		obj.args(1, 10);
@@ -116,36 +117,5 @@ test("pure parameter tests", (t) => {
 		t.end();
 	});
 	
-	t.end();
-});
-
-test("as simple decorator tests", (t) => {
-	class Tested {
-		@cached
-		args(...args) {
-			return (...innerArgs) => [...args, ...innerArgs];
-		}
-	}
-	
-	const obj = new Tested();
-	t.deepEqual(obj.args(5)(), [5], 'With single param');
-	t.deepEqual(obj.args(5)(100), [5, 100], 'With complex params');
-
-	t.deepEqual(obj.args(7, true, 'param')(), [7, true, 'param'], 'Params order');
-	t.deepEqual(obj.args(7, false, 'param')(), [7, false, 'param'], 'Params are changed after the second call');
-	t.deepEqual(obj.args(7, true, 'param')(10, false), [7, true, 'param', 10, false], 'Params order with inner params');
-	t.deepEqual(obj.args(7, true, 'param')(10, true), [7, true, 'param', 10, true], 'Inner params are changed after second call');
-
-	t.equals(obj.args(7, true, 'param'), obj.args(7, false, 'param'), 'Returned functions with the same key are equals.');
-	t.notEqual(obj.args(7, true, 'param'), obj.args(8, true, 'param'), 'Returned functions with the different key are not equals.');
-
-	const cachedCallback = obj.args(7, true, 'param');
-	obj.args(8, true, 'param');
-	t.deepEqual(cachedCallback(100, true), [7, true, 'param', 100, true], 'Calls  with other params do not affect the previously bound function.');
-
-	const diffObj1 = new Tested();
-	const diffObj2 = new Tested();
-	t.notEqual(diffObj1.args(1), diffObj2.args(1), 'Bound functions for different object are not equals.')
-
 	t.end();
 });

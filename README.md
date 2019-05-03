@@ -1,4 +1,7 @@
-# react-cached-callback #
+# todo добавить CHANGELOG
+# todo Дописать readme
+# todo Поднять версию на мажор
+# react-cached-callback
 `react-cached-callback` is a helper to remove arrow-functions and bind from cycles in `react` component's `render` method.
 Example:
 ```javascript
