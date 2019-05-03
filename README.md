@@ -1,4 +1,3 @@
-# todo добавить CHANGELOG
 # todo Дописать readme
 # todo Поднять версию на мажор
 # react-cached-callback
