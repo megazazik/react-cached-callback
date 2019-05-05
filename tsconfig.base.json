@@ -1,12 +1,13 @@
 {
 	"compilerOptions": {
-		"sourceMap": true,
+		"sourceMap": false,
 		"module": "commonjs",
 		"target": "es5",
 		"declaration": true,
 		"moduleResolution": "node",
 		"outDir": "./dist/",
 		"experimentalDecorators": true,
+		"esModuleInterop": true,
 		"jsx": "react",
 		"lib": [
 			"es2015",

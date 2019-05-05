@@ -3,10 +3,18 @@
   "version": "1.0.1",
   "description": "Library for excluding function generations on React's render function call",
   "main": "dist/index.js",
+  "module": "dist-es/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "node ./node_modules/ts-node/dist/bin ./node_modules/tape/bin/tape ./src/**.spec.ts",
-    "build": "node ./node_modules/typescript/bin/tsc -p tsconfig.base.json"
+    "test": "ts-node -r ./config/require ./node_modules/tape/bin/tape",
+    "tests": "npm run test ./src/**/*.spec.*",
+    "test-w": "nodemon -e ts,tsx --exec npm run test",
+    "build": "npm run build-cjs && npm run build-es",
+    "build-cjs": "tsc -p tsconfig.base.json",
+    "build-es": "tsc -p tsconfig.es.json",
+    "prepublishOnly": "npm run tests && npm run build",
+    "version": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
+    "commit": "git-cz"
   },
   "keywords": [
     "react",
@@ -16,12 +24,25 @@
     "arrow-function"
   ],
   "devDependencies": {
+    "@types/enzyme": "^3.9.1",
     "@types/node": "^8.0.46",
     "@types/tape": "^4.2.30",
-    "nodemon": "^1.12.1",
+    "commitizen": "^3.1.1",
+    "conventional-changelog-cli": "^2.0.17",
+    "cz-conventional-changelog": "^2.1.0",
+    "enzyme": "^3.9.0",
+    "enzyme-adapter-react-16": "^1.11.2",
+    "jsdom": "^14.0.0",
+    "jsdom-global": "^3.0.2",
+    "nodemon": "^1.18.10",
+    "react": "^16.8.5",
+    "react-dom": "^16.8.5",
     "tape": "^4.8.0",
     "ts-node": "^3.3.0",
-    "typescript": "^2.4.1"
+    "typescript": "^3.3.4000"
+  },
+  "peerDependencies": {
+    "react": "^16.8.0"
   },
   "repository": {
     "type": "git",
@@ -30,5 +51,10 @@
   "homepage": "https://github.com/megazazik/react-cached-callback",
   "author": "Michael Lebedev",
   "email": "megazazik@rambler.ru",
-  "license": "MIT"
+  "license": "MIT",
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  }
 }
