@@ -2,10 +2,10 @@
 `react-cached-callback` is a helper to remove arrow-functions and bind from cycles in `react` component's `render` method.
 
 This package containes the following helpers:
-* [cached](#cached) decorator ([makeCached](#makeCached))
-* [useGetCallback](#useGetCallback)
-* [useEventCallback](#useEventCallback)
-* [useGetEventCallback](#useGetEventCallback)
+* [cached](#cached) decorator ([makeCached](#makecached))
+* [useGetCallback](#usegetcallback)
+* [useEventCallback](#useeventcallback)
+* [useGetEventCallback](#usegeteventcallback)
 
 Example with `cached`:
 ```javascript
