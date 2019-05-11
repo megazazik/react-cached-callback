@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+mv $(npm pack) ./test/package.tgz
+cd test
+npm i package.tgz

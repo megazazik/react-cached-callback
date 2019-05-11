@@ -1,0 +1,14 @@
+{
+  "name": "react-cached-callback-test",
+  "version": "1.0.0",
+  "description": "Integration tests for react-cached-callback",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "megazazik <megazazik@rambler.ru>",
+  "license": "MIT",
+  "dependencies": {
+    "react-cached-callback": "file:package.tgz"
+  }
+}
