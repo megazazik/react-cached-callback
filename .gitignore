@@ -4,3 +4,5 @@ npm-debug.log
 
 dist/
 dist-es/
+test/package.tgz
+test/package-lock.json
