@@ -91,7 +91,7 @@ test('useGetEventCallback. Warnings during render', (t) => {
 	t.end();
 });
 
-test('useGetEventCallback. No warnings during render', (t) => {
+test('useGetEventCallback. No warnings during render without call', (t) => {
 	const TestComponent = () => {
 		const createCallback = useGetEventCallback(() => () => {});
 
@@ -137,7 +137,22 @@ test('useGetEventCallback. No warnings in useEffect', (t) => {
 
 	const [_, wasWarning] = mountCheckWarning(<TestComponent />);
 
-	t.notOk(wasWarning, 'Should raise warning')
+	t.notOk(wasWarning, 'Should not raise warning')
+
+	t.end();
+});
+
+test('useGetEventCallback. No warnings in useLayoutEffect', (t) => {
+	const TestComponent = () => {
+		const createCallback = useGetEventCallback(() => () => {});
+		React.useLayoutEffect(() => createCallback());
+
+		return null;
+	}
+
+	const [_, wasWarning] = mountCheckWarning(<TestComponent />);
+
+	t.notOk(wasWarning, 'Should not raise warning')
 
 	t.end();
 });

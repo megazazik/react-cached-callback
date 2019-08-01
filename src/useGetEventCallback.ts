@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useLayoutEffect } from 'react';
 import initGetKey, { Params } from './getKey';
 
 export { Params };
@@ -20,7 +20,7 @@ function useGetEventCallbackInner<C extends ((...args) => (...args) => any)> (
         callbacksCache.current = {};
     }
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         // update old and clear unused callbacks
         Object.keys(callbacksCache.current).forEach((cacheKey) => {
             if (callbacksCache.current[cacheKey].next) {
