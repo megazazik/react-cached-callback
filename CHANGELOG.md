@@ -1,3 +1,12 @@
+## [2.0.1](https://github.com/megazazik/react-cached-callback/compare/v2.0.0...v2.0.1) (2019-08-01)
+
+
+### Bug Fixes
+
+* **useGetEventCallback:** update callback in useLayoutEffect instead of useEffect ([17285fa](https://github.com/megazazik/react-cached-callback/commit/17285fa))
+
+
+
 # [2.0.0](https://github.com/megazazik/react-cached-callback/compare/v1.0.1...v2.0.0) (2019-05-11)
 
 
