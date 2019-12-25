@@ -1,4 +1,7 @@
 # react-cached-callback
+
+[![npm version](https://badge.fury.io/js/react-cached-callback.svg)](https://badge.fury.io/js/react-cached-callback)
+
 `react-cached-callback` is a helper to remove arrow-functions and bind from cycles in `react` component's `render` method.
 
 This package containes the following helpers:
