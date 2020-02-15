@@ -1,3 +1,12 @@
+## [2.0.2](https://github.com/megazazik/react-cached-callback/compare/v2.0.1...v2.0.2) (2020-02-15)
+
+
+### Bug Fixes
+
+* **usegetcallback:** fix error when there was no calls of getCallback during render ([56b10ad](https://github.com/megazazik/react-cached-callback/commit/56b10ad))
+
+
+
 ## [2.0.1](https://github.com/megazazik/react-cached-callback/compare/v2.0.0...v2.0.1) (2019-08-01)
 
 
