@@ -1,3 +1,12 @@
+## [2.0.3](https://github.com/megazazik/react-cached-callback/compare/v2.0.2...v2.0.3) (2020-02-22)
+
+
+### Bug Fixes
+
+* fix react warning during ssr ([7967257](https://github.com/megazazik/react-cached-callback/commit/7967257))
+
+
+
 ## [2.0.2](https://github.com/megazazik/react-cached-callback/compare/v2.0.1...v2.0.2) (2020-02-15)
 
 
