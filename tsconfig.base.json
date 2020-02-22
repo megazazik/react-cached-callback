@@ -9,12 +9,7 @@
 		"experimentalDecorators": true,
 		"esModuleInterop": true,
 		"jsx": "react",
-		"lib": [
-			"es2015",
-			"es5"
-		]
+		"lib": ["es2015", "es5", "DOM"]
 	},
-	"files": [
-		"src/index.ts"
-	]
+	"files": ["src/index.ts"]
 }
