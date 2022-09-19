@@ -2,4 +2,4 @@
 
 mv $(npm pack) ./test/package.tgz
 cd test
-npm i package.tgz
+npm i --omit=peer package.tgz
