@@ -1,9 +1,18 @@
+## [2.0.4](https://github.com/megazazik/react-cached-callback/compare/v2.0.3...v2.0.4) (2022-09-19)
+
+
+### Bug Fixes
+
+* **peerdependencies:** add react 17 and 18 to peerDependencies ([cee64e8](https://github.com/megazazik/react-cached-callback/commit/cee64e853ee31aaca4941d7b07ec70ba39112d0e))
+
+
+
 ## [2.0.3](https://github.com/megazazik/react-cached-callback/compare/v2.0.2...v2.0.3) (2020-02-22)
 
 
 ### Bug Fixes
 
-* fix react warning during ssr ([7967257](https://github.com/megazazik/react-cached-callback/commit/7967257))
+* fix react warning during ssr ([7967257](https://github.com/megazazik/react-cached-callback/commit/7967257fe1efa09d453cae3e80f9bbc3faa07625))
 
 
 
@@ -12,7 +21,7 @@
 
 ### Bug Fixes
 
-* **usegetcallback:** fix error when there was no calls of getCallback during render ([56b10ad](https://github.com/megazazik/react-cached-callback/commit/56b10ad))
+* **usegetcallback:** fix error when there was no calls of getCallback during render ([56b10ad](https://github.com/megazazik/react-cached-callback/commit/56b10adbd970fdeec0740a4c6569dff550b25048))
 
 
 
@@ -21,7 +30,7 @@
 
 ### Bug Fixes
 
-* **useGetEventCallback:** update callback in useLayoutEffect instead of useEffect ([17285fa](https://github.com/megazazik/react-cached-callback/commit/17285fa))
+* **useGetEventCallback:** update callback in useLayoutEffect instead of useEffect ([17285fa](https://github.com/megazazik/react-cached-callback/commit/17285fae45e6e891da4b9dc087b0aa705aca56ce))
 
 
 
@@ -30,7 +39,7 @@
 
 ### Features
 
-* **hooks:** add hooks useGetCallback, useEventCallback, useGetEventCallback ([54eaf0c](https://github.com/megazazik/react-cached-callback/commit/54eaf0c))
+* **hooks:** add hooks useGetCallback, useEventCallback, useGetEventCallback ([54eaf0c](https://github.com/megazazik/react-cached-callback/commit/54eaf0cd8ddad32e1a70d1cac59e167dc7853843))
 
 
 ### BREAKING CHANGES
