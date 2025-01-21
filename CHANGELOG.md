@@ -1,3 +1,12 @@
+## [2.0.5](https://github.com/megazazik/react-cached-callback/compare/v2.0.4...v2.0.5) (2025-01-21)
+
+
+### Bug Fixes
+
+* react 19 support ([ed3cad8](https://github.com/megazazik/react-cached-callback/commit/ed3cad8885b58d9f479a8a8303e64e032629646a))
+
+
+
 ## [2.0.4](https://github.com/megazazik/react-cached-callback/compare/v2.0.3...v2.0.4) (2022-09-19)
 
 
